@@ -1,0 +1,12 @@
+# Point clouds and rasters are rebuilt by the pipeline (and are large).
+data/raw/
+data/interim/
+data/processed/
+*.laz
+*.las
+*.tif
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.venv/
