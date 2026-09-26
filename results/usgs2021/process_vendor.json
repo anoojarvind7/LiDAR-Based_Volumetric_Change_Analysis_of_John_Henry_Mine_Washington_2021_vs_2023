@@ -1,0 +1,8 @@
+{
+  "survey": "usgs2021",
+  "ground": "vendor",
+  "resolution_m": 1.0,
+  "dtm_valid_fraction": 0.9827084444444445,
+  "ground_density_median_pts_m2": 2.0,
+  "water_bodies": 10
+}

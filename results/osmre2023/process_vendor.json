@@ -1,0 +1,8 @@
+{
+  "survey": "osmre2023",
+  "ground": "vendor",
+  "resolution_m": 0.5,
+  "dtm_valid_fraction": 0.5719277777777778,
+  "ground_density_median_pts_m2": 0.0,
+  "water_bodies": 3
+}

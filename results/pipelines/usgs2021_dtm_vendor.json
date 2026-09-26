@@ -1,0 +1,28 @@
+[
+  {
+    "type": "readers.las",
+    "filename": "data/interim/usgs2021_vendor.laz"
+  },
+  {
+    "type": "filters.range",
+    "limits": "Classification[2:2],Classification[9:9]"
+  },
+  {
+    "type": "filters.delaunay"
+  },
+  {
+    "type": "filters.faceraster",
+    "resolution": 1.0,
+    "origin_x": 575050,
+    "origin_y": 5240450.0,
+    "width": 2250,
+    "height": 2000,
+    "max_triangle_edge_length": 50.0
+  },
+  {
+    "type": "writers.raster",
+    "filename": "data/processed/usgs2021_vendor_dtm.tif",
+    "data_type": "float32",
+    "gdalopts": "COMPRESS=DEFLATE,TILED=YES,PREDICTOR=3"
+  }
+]

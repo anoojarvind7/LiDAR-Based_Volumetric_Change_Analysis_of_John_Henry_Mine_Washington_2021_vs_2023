@@ -1,0 +1,21 @@
+name: minevol
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - pdal>=2.6
+  - python-pdal>=3.4
+  - numpy
+  - scipy
+  - pandas
+  - geopandas
+  - shapely>=2
+  - rasterio
+  - pyproj
+  - matplotlib
+  - pyyaml
+  - requests
+  - pytest
+  - ruff
+  - pip
+  - pip:
+      - -e .

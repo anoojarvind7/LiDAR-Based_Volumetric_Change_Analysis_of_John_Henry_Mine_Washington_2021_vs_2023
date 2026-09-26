@@ -1,0 +1,28 @@
+[
+  {
+    "type": "readers.las",
+    "filename": "data/raw/usgs2021.laz"
+  },
+  {
+    "type": "filters.expression",
+    "expression": "Classification != 7 && Classification != 18 && Withheld == 0"
+  },
+  {
+    "type": "filters.outlier",
+    "method": "statistical",
+    "mean_k": 12,
+    "multiplier": 3.0
+  },
+  {
+    "type": "filters.expression",
+    "expression": "Classification != 7"
+  },
+  {
+    "type": "writers.las",
+    "filename": "data/interim/usgs2021_vendor.laz",
+    "compression": "laszip",
+    "minor_version": 4,
+    "extra_dims": "all",
+    "forward": "all"
+  }
+]

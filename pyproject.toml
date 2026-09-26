@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minevol"
+version = "0.1.0"
+description = "Stockpile, pit and change volumes from airborne lidar point clouds (John Henry No. 1 Mine, WA)"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+# PDAL (C++ library + python bindings) comes from conda-forge; see environment.yml.
+dependencies = [
+  "numpy", "scipy", "pandas", "geopandas", "shapely>=2", "rasterio", "pyproj",
+  "matplotlib", "pyyaml", "requests",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+minevol = "minevol.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]

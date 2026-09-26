@@ -1,0 +1,152 @@
+{
+ "type": "FeatureCollection",
+ "name": "john_henry_features",
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "urn:ogc:def:crs:EPSG::6339"
+  }
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "North spoil dump",
+    "kind": "pile",
+    "note": "Flat-topped dump north of the pit lake; south flank steps down in benches to the lake."
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       575860,
+       5241380
+      ],
+      [
+       576470,
+       5241380
+      ],
+      [
+       576470,
+       5241850
+      ],
+      [
+       575860,
+       5241850
+      ],
+      [
+       575860,
+       5241380
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "NE ridge fill",
+    "kind": "pile",
+    "note": "Elongated N-S fill ridge east of the haul road."
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       576690,
+       5241570
+      ],
+      [
+       576950,
+       5241570
+      ],
+      [
+       576950,
+       5242260
+      ],
+      [
+       576690,
+       5242260
+      ],
+      [
+       576690,
+       5241570
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "West stockpile",
+    "kind": "pile",
+    "note": "Terraced pile west of the pit lake."
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       575440,
+       5240870
+      ],
+      [
+       575750,
+       5240870
+      ],
+      [
+       575750,
+       5241190
+      ],
+      [
+       575440,
+       5241190
+      ],
+      [
+       575440,
+       5240870
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "South stockpile",
+    "kind": "pile",
+    "note": "Terraced trapezoidal pile, southwest corner of the site."
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       575390,
+       5240590
+      ],
+      [
+       575920,
+       5240590
+      ],
+      [
+       575920,
+       5240860
+      ],
+      [
+       575390,
+       5240860
+      ],
+      [
+       575390,
+       5240590
+      ]
+     ]
+    ]
+   }
+  }
+ ]
+}
