@@ -10,8 +10,18 @@ def test_survey_sigma_random_term_scales_with_sqrt_area():
     s1 = survey_sigma(10_000, 1.0, sigma_r=0.1)
     s4 = survey_sigma(40_000, 1.0, sigma_r=0.1)
     assert s4 == pytest.approx(2 * s1)
-    # Fully correlated below the correlation area: sigma * A.
-    assert survey_sigma(100, 1.0, 0.0, sigma_c=0.05, range_m=50) == pytest.approx(5.0)
+    # A tiny area is almost fully correlated: sigma * A.
+    assert survey_sigma(1, 1.0, 0.0, sigma_c=0.05, range_m=50) == pytest.approx(0.05, rel=0.02)
+    # Continuous where the circle-equivalent radius equals the range (Rolstad eq. 8).
+    at = np.pi * 50.0**2
+    below = survey_sigma(at * (1 - 1e-9), 1.0, 0.0, sigma_c=0.05, range_m=50)
+    above = survey_sigma(at * (1 + 1e-9), 1.0, 0.0, sigma_c=0.05, range_m=50)
+    assert below == pytest.approx(above, rel=1e-6)
+    assert above == pytest.approx(0.05 * at / np.sqrt(5), rel=1e-6)
+    # A larger feature never has a smaller correlated error than a smaller one.
+    areas = np.linspace(1_000, 200_000, 50)
+    s = [survey_sigma(a, 1.0, 0.0, sigma_c=0.05, range_m=160) for a in areas]
+    assert np.all(np.diff(s) > 0)
 
 
 def test_stable_ground_bias_is_robust_to_outliers():

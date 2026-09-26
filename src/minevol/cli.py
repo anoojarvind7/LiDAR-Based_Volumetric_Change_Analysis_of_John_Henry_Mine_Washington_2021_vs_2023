@@ -23,7 +23,9 @@ def main(argv=None) -> None:
     prj = wf.Project.load(a.config)
     surveys = [a.survey] if a.survey else list(prj.cfg["surveys"])
 
-    stages = ["fetch", "process", "volumes", "resolution", "change", "report"] \
+    # The change stage runs before volumes: its stable-ground variogram sets the
+    # survey error that volumes() propagates (see workflow._survey_error).
+    stages = ["fetch", "process", "change", "volumes", "resolution", "report"] \
         if a.stage == "all" else [a.stage]
     for st in stages:
         if st == "change":

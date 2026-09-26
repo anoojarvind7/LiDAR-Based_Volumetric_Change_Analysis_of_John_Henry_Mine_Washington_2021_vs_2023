@@ -3,17 +3,18 @@
 Two independent sources are combined in quadrature (1-sigma):
 
 1. **Reference-surface uncertainty** - how much the answer depends on choices
-   nobody can verify: the interpolator used for the base (harmonic / TIN /
-   spline), the relief threshold that places the toe or crest, and how far the
-   outline is padded. It is the standard deviation of the volume over that
-   ensemble. For stockpiles and pits this term usually dominates.
+   nobody can verify: the interpolator used for the base (the config's
+   ``base_methods``) and the toe polygon shrunk and grown by the digitising
+   tolerance (``toe_buffer_m``). It is the standard deviation of the volume
+   over that ensemble. For stockpiles and pits this term usually dominates.
 
 2. **Survey (elevation) uncertainty** - random and spatially correlated DTM
    error propagated over the feature's area A (Rolstad et al., 2009, J.
-   Glaciol. 55(192), eq. 8 for a circle-equivalent area larger than the
-   correlation area)::
+   Glaciol. 55(192), eq. 8, treating A as a circle of radius r)::
 
-       sigma_V^2 = sigma_r^2 * a * A  +  sigma_c^2 * A * (pi * L^2 / 5)
+       sigma_V^2 = sigma_r^2 * a * A  +  sigma_c^2 * A^2 * f(r / L)
+       f(q) = 1 - q + q^3 / 5     for q <= 1
+       f(q) = 1 / (5 q^2)         for q > 1   (i.e. sigma_c^2 * A * pi L^2 / 5)
 
    with ``a`` the cell area, ``sigma_r`` the uncorrelated error, ``sigma_c``
    and ``L`` the correlated error and its range. A uniform vertical bias does
@@ -34,9 +35,11 @@ def survey_sigma(area_m2: float, cell_m: float, sigma_r: float, sigma_c: float =
     a = cell_m * cell_m
     var = sigma_r**2 * a * area_m2
     if sigma_c and range_m:
-        corr_area = np.pi * range_m**2
-        # For areas smaller than the correlation area the error is fully correlated.
-        var += sigma_c**2 * (area_m2 * corr_area / 5.0 if area_m2 > corr_area else area_m2**2)
+        # Rolstad et al. (2009) eq. 8, with the area as a circle of radius r:
+        # the fraction of the correlated variance left in the mean elevation.
+        q = np.sqrt(area_m2 / np.pi) / range_m
+        frac = 1.0 - q + q**3 / 5.0 if q <= 1.0 else 1.0 / (5.0 * q**2)
+        var += sigma_c**2 * area_m2**2 * frac
     var += (sigma_bias * area_m2) ** 2
     return float(np.sqrt(var))
 
