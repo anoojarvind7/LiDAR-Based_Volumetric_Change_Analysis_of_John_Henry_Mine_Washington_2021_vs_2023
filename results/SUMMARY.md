@@ -45,11 +45,11 @@ How much the volume depends on where the toe is drawn (not part of the ± above;
 
 | Feature | Volume (m³) | ± 95 % (m³) | Footprint (m²) | Max height (m) | Ground pts/m² | Base share of σ |
 |---|---:|---:|---:|---:|---:|---:|
-| North spoil dump | 2,455,942 | 283,837 | 209,677 | 31.9 | 10.0 | 100% |
-| NE ridge fill | 1,140,593 | 131,379 | 100,295 | 24.5 | 3.1 | 100% |
-| West stockpile | 738,671 | 102,831 | 69,391 | 22.9 | 10.9 | 99% |
-| South stockpile | 1,015,951 | 120,309 | 88,432 | 25.8 | 7.9 | 100% |
-| **Total** | **5,351,156** | 350,531 | | | | |
+| North spoil dump | 2,455,938 | 283,918 | 209,677 | 31.9 | 10.0 | 100% |
+| NE ridge fill | 1,140,594 | 131,871 | 100,295 | 24.5 | 3.1 | 99% |
+| West stockpile | 738,672 | 102,832 | 69,391 | 22.9 | 10.9 | 99% |
+| South stockpile | 1,015,950 | 120,717 | 88,432 | 25.8 | 7.9 | 99% |
+| **Total** | **5,351,155** | 350,922 | | | | |
 
 Grid-resolution check (central volume, m³):
 
@@ -79,14 +79,14 @@ How much the volume depends on where the toe is drawn (not part of the ± above;
 
 ## Change usgs2021 → osmre2023
 
-Co-registration shift removed: +0.075 m (NMAD 0.101 m on 1,171,096 stable cells). Level of detection: 0.25 m.
+Co-registration shift removed: +0.074 m (NMAD 0.101 m on 1,184,907 stable cells). Level of detection: 0.25 m.
 
 | Region | Fill (m³) | Cut (m³) | Net (m³) |
 |---|---:|---:|---:|
-| whole site | 188,130 ± 26,753 | 1,135,150 ± 25,605 | -947,020 |
-| North spoil dump | 33,591 ± 6,033 | 603,048 ± 19,038 | -569,457 |
-| NE ridge fill | 1,800 ± 920 | 521 ± 313 | 1,280 |
-| West stockpile | 17,621 ± 3,844 | 187,918 ± 5,212 | -170,297 |
-| South stockpile | 14,337 ± 3,488 | 262,149 ± 7,530 | -247,812 |
+| whole site | 189,015 ± 22,957 | 1,135,200 ± 21,855 | -946,185 |
+| North spoil dump | 33,638 ± 5,951 | 603,007 ± 9,765 | -569,369 |
+| NE ridge fill | 1,824 ± 919 | 525 ± 312 | 1,298 |
+| West stockpile | 17,652 ± 3,793 | 187,907 ± 5,124 | -170,255 |
+| South stockpile | 14,366 ± 3,441 | 262,134 ± 7,402 | -247,769 |
 
 ![change](figures/change.png)

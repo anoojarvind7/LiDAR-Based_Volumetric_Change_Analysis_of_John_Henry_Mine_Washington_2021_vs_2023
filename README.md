@@ -42,10 +42,10 @@ reclamation earthworks that push spoil back into the flooded pit.
 
 | Region | Cut (m³) | Fill (m³) | Net (m³) |
 |---|---:|---:|---:|
-| Whole site (excl. lakes) | 1,135,000 ± 26,000 | 188,000 ± 27,000 | −947,000 |
-| North spoil dump | 603,000 ± 19,000 | 34,000 ± 6,000 | −569,000 |
-| South stockpile | 262,000 ± 8,000 | 14,000 ± 3,000 | −248,000 |
-| West stockpile | 188,000 ± 5,000 | 18,000 ± 4,000 | −170,000 |
+| Whole site (excl. lakes) | 1,135,000 ± 22,000 | 189,000 ± 23,000 | −946,000 |
+| North spoil dump | 603,000 ± 10,000 | 34,000 ± 6,000 | −569,000 |
+| South stockpile | 262,000 ± 7,000 | 14,000 ± 3,400 | −248,000 |
+| West stockpile | 188,000 ± 5,000 | 18,000 ± 3,800 | −170,000 |
 | NE ridge fill | 500 | 1,800 | +1,300 |
 
 ### Checks that the numbers hold together
@@ -62,7 +62,7 @@ reclamation earthworks that push spoil back into the flooded pit.
   volume by 0.4–0.7 %.
 * **Survey agreement.** On stable ground the two surveys differ by a
   +7.5 cm datum offset (removed) with 9 cm random and 9 cm correlated
-  (≈190 m range) noise, which gives the 0.25 m level of detection.
+  (≈160 m range) noise, which gives the 0.25 m level of detection.
 * **Known answers.** Cones, paraboloids and a synthetic cut/fill scenario are
   recovered to within 0.5 % (`tests/`).
 

@@ -1,19 +1,27 @@
 [
   {
     "type": "readers.las",
-    "filename": "/mnt/project-files/tpc_A_01.laz"
+    "filename": "data/raw/osmre2023/tpc_A_01.laz"
   },
   {
     "type": "readers.las",
-    "filename": "/mnt/project-files/tpc_A_02.laz"
+    "filename": "data/raw/osmre2023/tpc_A_02.laz"
   },
   {
     "type": "readers.las",
-    "filename": "/mnt/project-files/tpc_B_01.laz"
+    "filename": "data/raw/osmre2023/tpc_A_03.laz"
   },
   {
     "type": "readers.las",
-    "filename": "/mnt/project-files/tpc_B_02.laz"
+    "filename": "data/raw/osmre2023/tpc_B_01.laz"
+  },
+  {
+    "type": "readers.las",
+    "filename": "data/raw/osmre2023/tpc_B_02.laz"
+  },
+  {
+    "type": "readers.las",
+    "filename": "data/raw/osmre2023/tpc_B_03.laz"
   },
   {
     "type": "filters.merge"
