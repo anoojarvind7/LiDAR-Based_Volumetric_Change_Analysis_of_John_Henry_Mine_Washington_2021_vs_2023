@@ -1,0 +1,60 @@
+# John Henry No. 1 Mine (surface coal), Black Diamond, King County, WA.
+# All paths are relative to the repository root.
+
+site:
+  name: John Henry No. 1 Mine
+  crs: EPSG:6339            # NAD83(2011) / UTM zone 10N, metres; heights NAVD88 (EPSG:5703)
+  # Extent of the 2023 OSMRE survey (OpenTopography bbox) rounded out to 50 m.
+  bounds: [575050, 5240450, 577300, 5242450]
+  features: data/features/search_outlines.geojson   # generous, hand-drawn
+  toes: data/features/toes.geojson                   # reviewed; defines the volumes
+
+surveys:
+  usgs2021:
+    label: USGS 3DEP King County 2021 (QL1)
+    source:
+      type: ept
+      url: https://usgs-lidar-public.s3.amazonaws.com/WA_KingCo_1_2021/ept.json
+    resolution: 1.0         # m; ~2.5 ground pts/m2 under this forest
+    # 3DEP QL1 requires non-vegetated RMSEz <= 10 cm.
+    sigma_z: 0.10
+
+  osmre2023:
+    label: OSMRE John Henry Mine 2023 (Surdex, flown 2023-10-06)
+    source:
+      type: s3
+      endpoint: https://opentopography.s3.sdsc.edu
+      bucket: pc-bulk
+      prefix: WA23_JohnHenry/
+    resolution: 0.5         # m; ~41 pts/m2 overall
+    thin_m: 0.2             # decimate ground before triangulating
+    sigma_z: 0.10           # placeholder until the vendor report is in hand
+
+# Which survey the headline feature volumes come from (the newest available).
+primary_survey: osmre2023
+
+# Toe proposal (`minevol toes`): from each search outline, keep cells more
+# than relief_m above a base interpolated from the outline's rim, pad by pad_m,
+# re-interpolate and repeat until stable. The central setting puts the toe on
+# the slope break seen in the hillshade; the sweep shows how much the volume
+# depends on that judgement (results/<survey>/toe_sweep_vendor.csv).
+toes:
+  relief_m: 1.0
+  pad_m: 2.0
+  sweep_relief_m: [0.5, 0.75, 1.0, 1.25, 1.5]
+  sweep_pad_m: [0.0, 2.0, 4.0, 6.0]
+
+volumes:
+  # First entry is the central estimate; the others span the uncertainty.
+  # "spline" is also available but excluded: a thin-plate spline bows upward
+  # inside a rim that rises toward the pile on all sides, which is a property
+  # of the interpolator, not of the ground.
+  base_methods: [harmonic, tin]
+  # Toe digitising tolerance: the toe polygon shrunk / grown by this much.
+  toe_buffer_m: [0.0, -2.0, 2.0]
+
+change:
+  # Surveys to difference (older, newer) and the level of detection.
+  pair: [usgs2021, osmre2023]
+  lod_confidence: 0.95
+  stable_max_slope_deg: 15
