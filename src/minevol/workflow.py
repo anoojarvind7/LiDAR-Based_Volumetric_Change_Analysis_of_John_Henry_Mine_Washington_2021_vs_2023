@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 import yaml
 from rasterio.features import shapes
+from scipy import ndimage
 from shapely.geometry import shape
 from shapely.ops import unary_union
 
@@ -20,7 +21,7 @@ from . import pointcloud as pc
 from . import uncertainty as unc
 from .grid import Grid
 from .volume import cut_fill, edge_contact, feature_volume, refine_mask, rim_stats
-from .water import find_water, flatten
+from .water import extend_into_gaps, find_water, flatten
 
 log = logging.getLogger(__name__)
 
@@ -78,6 +79,12 @@ def fetch(prj: Project, s: str) -> Path:
     g = prj.grid(s)
     if src["type"] == "ept":
         return pc.fetch_ept(src["url"], g, out, dump=prj.pipelines(s, "fetch"))
+    if src.get("local_dir") and Path(src["local_dir"]).is_dir():
+        # Tiles already downloaded by hand (e.g. from OpenTopography's web bucket browser).
+        tiles = sorted(Path(src["local_dir"]).glob(src.get("local_glob", "*.la[sz]")))
+        if tiles:
+            return pc.merge_tiles(tiles, g, out, src.get("in_srs"),
+                                  dump=prj.pipelines(s, "fetch"))
     if src["type"] == "s3":
         tiles = pc.fetch_s3_tiles(src["endpoint"], src["bucket"], src["prefix"],
                                   prj.p("data", "raw", s))
@@ -102,6 +109,12 @@ def process(prj: Project, s: str, ground: str = "vendor") -> dict:
     pts = pc.class_points(clean, (pc.GROUND, pc.WATER))
     w = pts["Classification"] == pc.WATER
     labels, bodies = find_water(g, pts["X"][w], pts["Y"][w], pts["Z"][w])
+    labels = extend_into_gaps(labels, ~np.isfinite(z))
+    for b in bodies:  # areas and outlines after filling mid-lake gaps
+        cells = labels == b.id
+        b.area_m2 = float(cells.sum() * g.res**2)
+        b.geometry = unary_union([shape(gm) for gm, v in shapes(
+            cells.astype("uint8"), mask=cells, transform=g.transform) if v])
     g.write(prj.dtm(s, ground), flatten(z, labels, bodies))
     ground_density = g.bin_count(pts["X"][~w], pts["Y"][~w]) / g.res**2
     g.write(prj.p("data", "processed", f"{s}_{ground}_ground_density.tif"), ground_density)
@@ -131,12 +144,18 @@ def toes(prj: Project, s: str, ground: str = "vendor") -> gpd.GeoDataFrame:
     padding pair in the config) is saved alongside to show how sensitive the
     volume is to where the toe is drawn.
     """
-    g = prj.grid(s)
-    z = g.read(prj.dtm(s, ground))
     t = prj.cfg["toes"]
+    # Toe placement does not need sub-metre cells, and the iterative solve is
+    # the slowest step, so it runs on a block-averaged grid.
+    g = Grid.from_bounds(prj.cfg["site"]["bounds"],
+                         max(t.get("resolution_m", 1.0), prj.survey(s)["resolution"]),
+                         prj.cfg["site"]["crs"])
+    z = _resample_to(prj, s, ground, g)
     rows, sweep = [], []
+    # Keep the search area (and so its rim) inside the survey's coverage.
+    covered = ndimage.binary_erosion(np.isfinite(z), iterations=2)
     for _, f in prj.features().iterrows():
-        outline = g.mask(f.geometry)
+        outline = g.mask(f.geometry) & covered
         for relief, pad in itertools.product(t["sweep_relief_m"], t["sweep_pad_m"]):
             m = refine_mask(z, outline, f["kind"], g.res, relief=relief, pad_m=pad)
             vol, _, _ = feature_volume(z, m, f["kind"], g.res)
@@ -304,7 +323,7 @@ def _survey_error(prj: Project, s: str) -> dict:
 
 def _density_in(prj: Project, s: str, ground: str, g: Grid, mask: np.ndarray) -> float:
     path = prj.p("data", "processed", f"{s}_{ground}_ground_density.tif")
-    return float(np.nanmedian(g.read(path)[mask])) if path.exists() else float("nan")
+    return float(np.nanmean(g.read(path)[mask])) if path.exists() else float("nan")
 
 
 def _resample_to(prj: Project, s: str, ground: str, g: Grid) -> np.ndarray:

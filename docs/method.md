@@ -21,7 +21,7 @@ can be replayed with `pdal pipeline <file>`.
 
 1. **Crop** to the survey extent (`filters.crop`).
 2. **Noise removal.** Vendor noise classes 7 and 18 and withheld points are
-   dropped, then a statistical outlier filter (`filters.outlier`, k = 12,
+   dropped (about 20 % of the 2023 points carry the vendor's withheld flag), then a statistical outlier filter (`filters.outlier`, k = 12,
    3 σ) removes isolated spikes the vendor missed.
 3. **Ground.** The vendor's ground class (2) is used by default: it has been
    through the vendor's QA and manual editing. As an independent check, the
@@ -34,7 +34,9 @@ can be replayed with `pdal pipeline <file>`.
    under-canopy areas are bridged faithfully; triangles with edges > 50 m are
    left empty rather than invented.
 5. **Water.** Water returns (class 9) are rasterised, gaps closed, and each
-   lake labelled. Its level is the median of its returns; the DTM is then
+   lake labelled. Lakes often return no signal away from the shore, so a
+   no-data hole that borders exactly one lake (and not the survey edge) is
+   assigned to it. Its level is the median of its returns; the DTM is then
    hydro-flattened to that level. Lidar does not see through water, so **all
    pit volumes are "above water"**; lake bathymetry is unknown.
 
@@ -54,7 +56,9 @@ then proposes the toe automatically (`minevol.volume.refine_mask`):
 3. pad by 2 m so the next rim lies on ground, and repeat until stable.
 
 The proposal is checked against the hillshade and committed as
-`data/features/toes.geojson`. That file, not the algorithm, defines each
+`data/features/toes.geojson` (the committed toes were proposed from the 2023
+survey; the 2021 survey, processed independently, proposes toes that overlap
+them by 96–99 %). That file, not the algorithm, defines each
 feature from then on, the same way a surveyor's digitised toe string does.
 This makes the volumes auditable, lets anyone redraw a toe they disagree
 with, and means the 2021 and 2023 volumes are measured over the same

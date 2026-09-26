@@ -60,6 +60,33 @@ def find_water(grid: Grid, x, y, z, min_area_m2: float = 500.0,
     return out, bodies
 
 
+def extend_into_gaps(labels: np.ndarray, nodata: np.ndarray) -> np.ndarray:
+    """Grow each lake into the no-data holes it borders.
+
+    Water often returns no signal away from the shore (specular reflection),
+    which leaves a hole in the middle of a lake. A no-data region that touches
+    exactly one lake and not the edge of the grid (the survey boundary) is
+    taken to be part of that lake.
+    """
+    out = labels.copy()
+    holes, _ = ndimage.label(nodata)
+    edge = set(np.unique(np.concatenate([holes[0], holes[-1], holes[:, 0], holes[:, -1]])))
+    ny, nx = holes.shape
+    for h, sl in enumerate(ndimage.find_objects(holes), start=1):
+        if sl is None or h in edge:
+            continue
+        # Work in the hole's bounding box grown by one cell.
+        r0, r1 = max(sl[0].start - 1, 0), min(sl[0].stop + 1, ny)
+        c0, c1 = max(sl[1].start - 1, 0), min(sl[1].stop + 1, nx)
+        cells = holes[r0:r1, c0:c1] == h
+        border = ndimage.binary_dilation(cells) & ~cells
+        touch = np.unique(labels[r0:r1, c0:c1][border])
+        touch = touch[touch > 0]
+        if len(touch) == 1:
+            out[r0:r1, c0:c1][cells] = touch[0]
+    return out
+
+
 def flatten(dtm: np.ndarray, labels: np.ndarray, bodies: list[WaterBody]) -> np.ndarray:
     """Set every lake cell to its lake's level."""
     out = dtm.copy()

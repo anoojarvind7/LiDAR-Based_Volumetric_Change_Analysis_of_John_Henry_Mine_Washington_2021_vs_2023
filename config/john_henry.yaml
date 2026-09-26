@@ -26,6 +26,10 @@ surveys:
       endpoint: https://opentopography.s3.sdsc.edu
       bucket: pc-bulk
       prefix: WA23_JohnHenry/
+      # Tiles already in this folder (e.g. downloaded by hand from the
+      # OpenTopography bucket browser) are used instead of downloading.
+      local_dir: data/raw/osmre2023
+      local_glob: "*.laz"
     resolution: 0.5         # m; ~41 pts/m2 overall
     thin_m: 0.2             # decimate ground before triangulating
     sigma_z: 0.10           # placeholder until the vendor report is in hand
@@ -39,6 +43,7 @@ primary_survey: osmre2023
 # the slope break seen in the hillshade; the sweep shows how much the volume
 # depends on that judgement (results/<survey>/toe_sweep_vendor.csv).
 toes:
+  resolution_m: 1.0
   relief_m: 1.0
   pad_m: 2.0
   sweep_relief_m: [0.5, 0.75, 1.0, 1.25, 1.5]

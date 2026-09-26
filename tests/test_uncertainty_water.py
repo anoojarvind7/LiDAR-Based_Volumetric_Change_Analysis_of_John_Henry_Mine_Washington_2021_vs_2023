@@ -45,3 +45,17 @@ def test_water_level_and_flatten():
     dtm = np.full(g.shape, 229.0)
     flat = flatten(dtm, labels, bodies)
     assert np.allclose(flat[labels == 1], bodies[0].level_m)
+
+
+def test_lake_grows_into_its_own_gap_but_not_the_survey_edge():
+    from minevol.water import extend_into_gaps
+
+    labels = np.zeros((50, 50), int)
+    labels[10:30, 10:30] = 1
+    nodata = np.zeros((50, 50), bool)
+    nodata[15:25, 15:25] = True      # hole in the middle of the lake
+    labels[15:25, 15:25] = 0
+    nodata[:, 45:] = True            # outside the survey
+    out = extend_into_gaps(labels, nodata)
+    assert (out[15:25, 15:25] == 1).all()
+    assert (out[:, 45:] == 0).all()

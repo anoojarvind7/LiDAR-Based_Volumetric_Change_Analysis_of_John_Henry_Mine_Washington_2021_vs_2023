@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 from matplotlib.colors import LightSource, TwoSlopeNorm
 
-from .workflow import Project, _slug
+from .workflow import Project, _resample_to, _slug
 
 INK, MUTED, ACCENT = "#1f2328", "#6e7781", "#0969da"
 plt.rcParams.update({
@@ -66,8 +66,12 @@ def fig_relief(prj: Project, s: str, out: Path) -> None:
     z = g.read(prj.dtm(s))
     feats = prj.toes()
     n = len(feats)
-    fig, axs = plt.subplots(1, n, figsize=(4.2 * n, 4.6))
-    for ax, (_, f) in zip(np.atleast_1d(axs), feats.iterrows(), strict=True):
+    cols = 2
+    rows = int(np.ceil(n / cols))
+    fig, axs = plt.subplots(rows, cols, figsize=(11, 4.8 * rows))
+    for ax in np.atleast_1d(axs).flat[n:]:
+        ax.set_visible(False)
+    for ax, (_, f) in zip(np.atleast_1d(axs).flat, feats.iterrows()):  # noqa: B905
         base = g.read(prj.p("data", "processed", f"{s}_vendor_base_{_slug(f['name'])}.tif"))
         rel = z - base
         x0, y0, x1, y1 = f.geometry.buffer(40).bounds
@@ -135,12 +139,12 @@ def fig_change(prj: Project, out: Path) -> None:
 
     g = Grid.from_bounds(prj.cfg["site"]["bounds"], meta["resolution_m"], prj.cfg["site"]["crs"])
     dz = g.read(path)
-    z = g.read(prj.dtm(new)) if prj.survey(new)["resolution"] == g.res else None
+    z = _resample_to(prj, new, "vendor", g)
     fig, (ax, ax2) = plt.subplots(1, 2, figsize=(13, 5.5), gridspec_kw={"width_ratios": [1.6, 1]})
-    if z is not None:
-        ax.imshow(hillshade(z, g.res), cmap="gray", extent=g.extent())
+    ax.imshow(hillshade(z, g.res), cmap="gray", extent=g.extent())
     shown = np.where(np.abs(dz) >= meta["lod_m"], dz, np.nan)
-    im = ax.imshow(shown, cmap="RdBu_r", norm=TwoSlopeNorm(0, -5, 5), extent=g.extent())
+    im = ax.imshow(shown, cmap="RdBu_r", norm=TwoSlopeNorm(0, -10, 10), extent=g.extent())
+    prj.toes().boundary.plot(ax=ax, color=INK, linewidth=0.6)
     fig.colorbar(im, ax=ax, shrink=0.7, label=f"Elevation change {old} → {new} (m)")
     ax.set_title(f"Change above the {meta['lod_m']:.2f} m level of detection", loc="left")
     ax.ticklabel_format(style="plain", useOffset=False)

@@ -13,34 +13,72 @@ against shapes with known volumes, and reproducible with one command.
 
 ## Results
 
-![Site overview with the four measured features](results/figures/usgs2021_overview.png)
+![Site overview with the four measured features](results/figures/osmre2023_overview.png)
 
-Volume above the reconstructed ground, from the 2021 USGS 3DEP survey. The ±
-is a 95 % interval covering the base-surface interpolator, a ±2 m toe
-tolerance and survey error. Full tables are in
-[`results/SUMMARY.md`](results/SUMMARY.md).
+### Pile volumes (October 2023 survey)
 
-| Feature | Volume (m³) | ± 95 % (m³) | Footprint (ha) | Max height (m) |
-|---|---:|---:|---:|---:|
-| North spoil dump | 3,046,000 | 252,000 | 20.7 | 35.7 |
-| South stockpile | 1,269,000 | 110,000 | 8.8 | 33.5 |
-| NE ridge fill | 1,153,000 | 129,000 | 10.0 | 24.6 |
-| West stockpile | 898,000 | 83,000 | 6.7 | 33.8 |
-| **Total** | **6,367,000** | **315,000** | 46.3 | |
+Volume above the reconstructed ground, from the OSMRE 2023 survey (0.5 m
+DTM). The ± is a 95 % interval covering the base-surface interpolator, a
+±2 m toe tolerance and survey error. The 2021 column uses the same toe
+polygons on the USGS 3DEP 2021 survey.
 
-* **Grid independence:** coarsening the DTM from 1 m to 2 m changes each
-  volume by 0.7–1.6 %.
-* **Toe placement matters more than anything else.** Moving the toe across
-  plausible positions changes volumes by up to ±20 %; see the toe sweep in
-  `results/SUMMARY.md` and the discussion in `docs/method.md`.
-* **Pit lake:** the main pit is flooded, a 10.4 ha lake at 230.52 m NAVD88.
-  Lidar does not penetrate water, so its submerged volume is not measurable
-  from these data.
+| Feature | 2023 volume (m³) | ± 95 % (m³) | 2021 volume (m³) | Footprint (ha) | Max height 2023 (m) |
+|---|---:|---:|---:|---:|---:|
+| North spoil dump | 2,456,000 | 284,000 | 3,022,000 | 21.0 | 31.9 |
+| NE ridge fill | 1,141,000 | 131,000 | 1,146,000 | 10.0 | 24.5 |
+| South stockpile | 1,016,000 | 120,000 | 1,273,000 | 8.8 | 25.8 |
+| West stockpile | 739,000 | 103,000 | 920,000 | 6.9 | 22.9 |
+| **Total** | **5,351,000** | **351,000** | **6,361,000** | 46.8 | |
 
-> **Status:** the 2023 OSMRE survey (41 pts/m², the primary dataset) and the
-> 2021→2023 change analysis are wired up and tested on synthetic data. They
-> run as soon as the 2023 point cloud is downloaded (`minevol fetch
-> osmre2023`), and these tables will then be regenerated from it.
+### What changed between 2021 and 2023
+
+![Elevation change 2021 to 2023](results/figures/change.png)
+
+About **1.14 million m³ was cut** from the flat tops of three dumps, lowering
+them by up to ~10 m. About 0.19 million m³ of fill is visible, mostly as new
+ground along the pit-lake shore. The rest presumably went below the water
+line, where lidar cannot see. The NE ridge did not change. This fits
+reclamation earthworks that push spoil back into the flooded pit.
+
+| Region | Cut (m³) | Fill (m³) | Net (m³) |
+|---|---:|---:|---:|
+| Whole site (excl. lakes) | 1,135,000 ± 26,000 | 188,000 ± 27,000 | −947,000 |
+| North spoil dump | 603,000 ± 19,000 | 34,000 ± 6,000 | −569,000 |
+| South stockpile | 262,000 ± 8,000 | 14,000 ± 3,000 | −248,000 |
+| West stockpile | 188,000 ± 5,000 | 18,000 ± 4,000 | −170,000 |
+| NE ridge fill | 500 | 1,800 | +1,300 |
+
+### Checks that the numbers hold together
+
+* **Two independent routes agree.** The drop in each pile's volume between
+  the surveys (2021 minus 2023, each measured against its own base surface)
+  matches the directly differenced change: North 566k vs 569k m³,
+  South 257k vs 248k, West 182k vs 170k, NE ridge 5k vs −1k. The DoD figures
+  are slightly smaller because changes under the 0.25 m detection limit are
+  zeroed.
+* **The toes are reproducible.** Toes proposed independently from the 2021 and
+  2023 surveys overlap by 96–99 % (intersection over union).
+* **Grid independence.** Coarsening the 2023 DTM from 0.5 m to 1 m changes each
+  volume by 0.4–0.7 %.
+* **Survey agreement.** On stable ground the two surveys differ by a
+  +7.5 cm datum offset (removed) with 9 cm random and 9 cm correlated
+  (≈190 m range) noise, which gives the 0.25 m level of detection.
+* **Known answers.** Cones, paraboloids and a synthetic cut/fill scenario are
+  recovered to within 0.5 % (`tests/`).
+
+### Caveats
+
+* **The toe matters most.** These dumps were graded into the hillside, so
+  where the pile "ends" is a judgement. Across plausible toe placements the
+  volumes move by up to ±20 % (toe sweep in `results/SUMMARY.md`), which is
+  larger than the stated ±. The toe polygons are committed in
+  `data/features/toes.geojson` so the definition is explicit and can be
+  changed.
+* **Pit lake.** The main pit is flooded (12.1 ha at 230.49 m NAVD88 in 2023).
+  Lidar does not penetrate water, so neither the pit's submerged volume nor
+  the spoil pushed below the water line can be measured.
+* **No pre-mining surface.** Mining started in 1986, before any lidar, so the
+  total excavation relative to original ground is not measured here.
 
 ## Quick start
 
