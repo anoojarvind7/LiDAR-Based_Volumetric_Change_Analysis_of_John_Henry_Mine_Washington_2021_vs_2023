@@ -58,7 +58,11 @@ then proposes the toe automatically (`minevol.volume.refine_mask`):
 The proposal is checked against the hillshade and committed as
 `data/features/toes.geojson` (the committed toes were proposed from the 2023
 survey; the 2021 survey, processed independently, proposes toes that overlap
-them by 96–99 %). That file, not the algorithm, defines each
+them by 97–99 %). A proposed toe that runs along its search outline has been
+cut off by it, so the outline is widened until the toe stops on the ground.
+Where two piles share a valley (West and South stockpiles), their outlines
+meet along the valley floor so each pile's base sits on that floor rather
+than on its neighbour's flank. That file, not the algorithm, defines each
 feature from then on, the same way a surveyor's digitised toe string does.
 This makes the volumes auditable, lets anyone redraw a toe they disagree
 with, and means the 2021 and 2023 volumes are measured over the same
@@ -98,7 +102,8 @@ dumps were graded to blend into the surrounding ground, so their aprons fade
 out over tens of metres. `minevol toes` also sweeps the toe threshold
 (0.5–1.5 m) and padding (0–6 m) and saves the result
 (`results/<survey>/toe_sweep_vendor.csv`, figure `*_toe_sweep.png`). Across
-that sweep the volume varies by up to ±20 %. It rises as the rim moves
+that sweep the volume varies by −49 % to +35 % (−10 % to +27 % for thresholds
+of 0.75–1.25 m with 2–4 m padding). It rises as the rim moves
 outward, because the ground falls away around each dump (they sit on spurs
 and are ringed by drainage ditches), so a rim further out drags the whole base
 down. The chosen toe follows the slope break visible in the hillshade. The
