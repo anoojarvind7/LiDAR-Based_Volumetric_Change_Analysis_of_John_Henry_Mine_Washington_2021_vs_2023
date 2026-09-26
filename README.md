@@ -30,10 +30,10 @@ polygons on the USGS 3DEP 2021 survey.
 | Feature | 2023 volume (m³) | ± 95 % (m³) | 2021 volume (m³) | Footprint (ha) | Max height 2023 (m) |
 |---|---:|---:|---:|---:|---:|
 | North spoil dump | 2,456,000 | 284,000 | 3,022,000 | 21.0 | 31.9 |
+| South stockpile | 1,267,000 | 128,000 | 1,524,000 | 10.2 | 29.1 |
 | NE ridge fill | 1,141,000 | 131,000 | 1,146,000 | 10.0 | 24.5 |
-| South stockpile | 1,016,000 | 120,000 | 1,273,000 | 8.8 | 25.8 |
-| West stockpile | 739,000 | 103,000 | 920,000 | 6.9 | 22.9 |
-| **Total** | **5,351,000** | **350,000** | **6,361,000** | 46.8 | |
+| West stockpile | 957,000 | 102,000 | 1,133,000 | 8.2 | 27.4 |
+| **Total** | **5,820,000** | **353,000** | **6,825,000** | 49.4 | |
 
 ### What changed between 2021 and 2023
 
@@ -48,9 +48,9 @@ reclamation earthworks that push spoil back into the flooded pit.
 | Region | Cut (m³) | Fill (m³) | Net (m³) |
 |---|---:|---:|---:|
 | Whole site (excl. lakes) | 1,135,000 ± 22,000 | 189,000 ± 23,000 | −946,000 |
-| North spoil dump | 603,000 ± 10,000 | 34,000 ± 6,000 | −569,000 |
-| South stockpile | 262,000 ± 7,000 | 14,000 ± 3,400 | −248,000 |
-| West stockpile | 188,000 ± 5,000 | 18,000 ± 3,800 | −170,000 |
+| North spoil dump | 603,000 ± 10,000 | 34,000 ± 4,000 | −569,000 |
+| South stockpile | 263,000 ± 5,000 | 15,000 ± 2,900 | −247,000 |
+| West stockpile | 188,000 ± 3,800 | 20,000 ± 3,400 | −169,000 |
 | NE ridge fill | 500 | 1,800 | +1,300 |
 
 ### Checks that the numbers hold together
@@ -58,11 +58,11 @@ reclamation earthworks that push spoil back into the flooded pit.
 * **Two independent routes agree.** The drop in each pile's volume between
   the surveys (2021 minus 2023, each measured against its own base surface)
   matches the directly differenced change: North 566k vs 569k m³,
-  South 257k vs 248k, West 182k vs 170k, NE ridge 5k vs −1k. The DoD figures
+  South 257k vs 247k, West 176k vs 169k, NE ridge 5k vs −1k. The DoD figures
   are slightly smaller because changes under the 0.25 m detection limit are
   zeroed.
 * **The toes are reproducible.** Toes proposed independently from the 2021 and
-  2023 surveys overlap by 96–99 % (intersection over union).
+  2023 surveys overlap by 97–99 % (intersection over union).
 * **Grid independence.** Coarsening the 2023 DTM from 0.5 m to 1 m changes each
   volume by 0.4–0.7 %.
 * **Survey agreement.** On stable ground the two surveys differ by a
@@ -75,7 +75,9 @@ reclamation earthworks that push spoil back into the flooded pit.
 
 * **The toe matters most.** These dumps were graded into the hillside, so
   where the pile "ends" is a judgement. Across plausible toe placements the
-  volumes move by up to ±20 % (toe sweep in `results/SUMMARY.md`), which is
+  volumes move by −10 % to +27 % when the toe threshold is varied between
+  0.75 and 1.25 m with 2–4 m padding, and by −49 % to +35 % across the full
+  sweep (0.5–1.5 m, 0–6 m; toe sweep in `results/SUMMARY.md`). Both are
   larger than the stated ±. The toe polygons are committed in
   `data/features/toes.geojson` so the definition is explicit and can be
   changed.

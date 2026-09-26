@@ -83,31 +83,55 @@
    "properties": {
     "name": "West stockpile",
     "kind": "pile",
-    "note": "Terraced pile west of the pit lake."
+    "note": "Terraced pile west of the pit lake. The south side follows the valley that separates it from the South stockpile."
    },
    "geometry": {
     "type": "Polygon",
     "coordinates": [
      [
       [
-       575440,
+       575385,
+       5240882
+      ],
+      [
+       575430,
+       5240873
+      ],
+      [
+       575510,
        5240870
       ],
       [
+       575570,
+       5240868
+      ],
+      [
+       575600,
+       5240880
+      ],
+      [
+       575630,
+       5240892
+      ],
+      [
+       575690,
+       5240902
+      ],
+      [
        575750,
-       5240870
+       5240910
       ],
       [
        575750,
        5241190
       ],
       [
-       575440,
+       575385,
        5241190
       ],
       [
-       575440,
-       5240870
+       575385,
+       5240882
       ]
      ]
     ]
@@ -118,7 +142,7 @@
    "properties": {
     "name": "South stockpile",
     "kind": "pile",
-    "note": "Terraced trapezoidal pile, southwest corner of the site."
+    "note": "Terraced trapezoidal pile, southwest corner of the site. The north side follows the valley that separates it from the West stockpile."
    },
    "geometry": {
     "type": "Polygon",
@@ -134,11 +158,39 @@
       ],
       [
        575920,
-       5240860
+       5240920
+      ],
+      [
+       575750,
+       5240910
+      ],
+      [
+       575690,
+       5240902
+      ],
+      [
+       575630,
+       5240892
+      ],
+      [
+       575600,
+       5240880
+      ],
+      [
+       575570,
+       5240868
+      ],
+      [
+       575510,
+       5240870
+      ],
+      [
+       575430,
+       5240873
       ],
       [
        575390,
-       5240860
+       5240882
       ],
       [
        575390,
