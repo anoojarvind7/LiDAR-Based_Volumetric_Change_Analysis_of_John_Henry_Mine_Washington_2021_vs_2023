@@ -81,7 +81,7 @@ footprint.
 DTM this converges to the exact prism volume; `tests/test_volume.py` checks
 cones and paraboloids on a sloping plane against their closed-form volumes
 (error < 0.5 % at 0.5–2 m cells), and the results include a resolution study
-(1, 2, 4 × the base cell).
+(1, 2 and 5 × the base cell).
 
 ## 4. Uncertainty
 
@@ -108,7 +108,9 @@ agree on the volume to within the stated ±.
 
 **Survey error.** Random plus spatially correlated elevation error over the
 footprint area *A* (Rolstad et al. 2009):
-`σ_V² = σ_r²·a·A + σ_c²·A·πL²/5`. The parameters come from the variogram
+`σ_V² = σ_r²·a·A + σ_c²·A·πL²/5` for a footprint larger than the
+correlation area πL², and `σ_V² = σ_r²·a·A + σ_c²·A²·(1 − q + q³/5)` with
+`q = √(A/π)/L` for a smaller one. The parameters come from the variogram
 of the 2021→2023 difference on stable ground when available, and from the
 config otherwise. A uniform vertical bias of the survey cancels out of a
 feature volume, because the base is interpolated from the same survey.

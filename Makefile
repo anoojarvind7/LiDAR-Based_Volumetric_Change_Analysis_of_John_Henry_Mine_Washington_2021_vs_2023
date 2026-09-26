@@ -4,7 +4,8 @@ MV = minevol --config $(CONFIG)
 
 .PHONY: all test lint fetch process volumes change report smrf-check
 
-all: fetch process volumes change report
+# change runs before volumes: its stable-ground variogram sets the volumes' survey error.
+all: fetch process change volumes report
 
 test:
 	pytest -q
