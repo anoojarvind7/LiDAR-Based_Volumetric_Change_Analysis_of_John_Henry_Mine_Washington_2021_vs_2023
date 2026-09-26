@@ -1,7 +1,7 @@
 # John Henry Mine lidar volumes, 2021 vs 2023
 
 A LiDAR / point-cloud processing example using the John Henry Mine, King County,
-Washington, USA. It uses a PDAL workflow to measure the mine's spoil piles and
+Washington, USA. A Python was used workflow to measure the mine's spoil piles and
 how they changed between 2021 and 2023. The 2023 lidar is distributed by
 OpenTopography and the 2021 lidar by the USGS 3D Elevation Program.
 
