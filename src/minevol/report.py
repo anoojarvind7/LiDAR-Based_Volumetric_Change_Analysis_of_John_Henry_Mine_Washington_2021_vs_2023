@@ -14,6 +14,7 @@ import numpy as np
 import pandas as pd
 from matplotlib.colors import LightSource, TwoSlopeNorm
 
+from . import uncertainty as unc
 from .workflow import Project, _resample_to, _slug
 
 INK, MUTED, ACCENT = "#1f2328", "#6e7781", "#0969da"
@@ -160,6 +161,14 @@ def fig_change(prj: Project, out: Path) -> None:
     plt.close(fig)
 
 
+def total_sigma(prj: Project, s: str, df: pd.DataFrame, ground: str = "vendor") -> float:
+    """1 σ of the summed volume of all features (see :func:`unc.total_sigma`)."""
+    ens = [prj.p("results", s, f"ensemble_{_slug(n)}_{ground}.csv") for n in df["feature"]]
+    if not all(p.exists() for p in ens):
+        return float(np.sqrt((df["sigma_m3"] ** 2).sum()))
+    return unc.total_sigma([pd.read_csv(p) for p in ens], df["sigma_survey_m3"])
+
+
 def build_report(prj: Project) -> Path:
     figs = prj.p("results", "figures")
     figs.mkdir(parents=True, exist_ok=True)
@@ -183,7 +192,7 @@ def build_report(prj: Project) -> Path:
             lines.append(f"| {r['feature']} | {r['volume_m3']:,.0f} | {1.96 * r['sigma_m3']:,.0f} "
                          f"| {r['area_m2']:,.0f} | {r['max_height_m']:.1f} "
                          f"| {r['ground_pts_per_m2']:.1f} | {share:.0%} |")
-        tot, tot_s = df["volume_m3"].sum(), np.sqrt((df["sigma_m3"] ** 2).sum())
+        tot, tot_s = df["volume_m3"].sum(), total_sigma(prj, s, df)
         lines += [f"| **Total** | **{tot:,.0f}** | {1.96 * tot_s:,.0f} | | | | |", ""]
         rs = prj.p("results", s, "resolution_study.csv")
         if rs.exists():

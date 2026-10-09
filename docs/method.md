@@ -96,6 +96,10 @@ interval. Two independent terms are combined in quadrature:
 interpolators (harmonic, TIN) and with the toe polygon shrunk and grown by
 2 m, a typical digitising tolerance. `sigma_reference_m3` is the standard
 deviation of those 6 values (saved in `results/<survey>/ensemble_*.csv`).
+For the **total** over all features this term is not added in quadrature:
+the same interpolator and toe tolerance apply to every pile at once, so the
+errors are shared. Each ensemble member is summed over the features first and
+the total's σ is the spread of those 6 sums (combined with the survey term).
 
 **Where the toe is drawn is a judgement, and it is shown separately.** These
 dumps were graded to blend into the surrounding ground, so their aprons fade

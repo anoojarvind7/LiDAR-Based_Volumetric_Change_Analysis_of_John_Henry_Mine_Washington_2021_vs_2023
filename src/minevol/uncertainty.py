@@ -48,6 +48,22 @@ def combine(*sigmas: float) -> float:
     return float(np.sqrt(np.sum(np.square(sigmas))))
 
 
+def total_sigma(ensembles, survey_sigmas) -> float:
+    """1 σ of the summed volume of several features.
+
+    The reference-surface term is not independent between features: one
+    interpolator and one toe tolerance are applied to every feature at once.
+    So each ensemble member (``toe_buffer_m`` x ``method``) is summed over the
+    features before its spread is taken; adding the per-feature σ in
+    quadrature would understate it. The survey term is treated as independent
+    between features.
+    """
+    import pandas as pd
+
+    totals = pd.concat(ensembles).groupby(["toe_buffer_m", "method"])["volume"].sum()
+    return combine(float(totals.std(ddof=1)), *survey_sigmas)
+
+
 def stable_ground_bias(dz: np.ndarray, stable: np.ndarray, slope_deg: np.ndarray | None = None,
                        max_slope: float = 15.0, clip: float = 1.0) -> dict:
     """Robust statistics of a DoD on terrain assumed not to have changed.

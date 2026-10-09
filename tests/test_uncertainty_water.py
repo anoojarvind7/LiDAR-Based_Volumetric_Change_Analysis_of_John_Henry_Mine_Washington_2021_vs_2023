@@ -69,3 +69,23 @@ def test_lake_grows_into_its_own_gap_but_not_the_survey_edge():
     out = extend_into_gaps(labels, nodata)
     assert (out[15:25, 15:25] == 1).all()
     assert (out[:, 45:] == 0).all()
+
+
+def test_total_sigma_sums_ensemble_members_before_spread():
+    import pandas as pd
+
+    from minevol.uncertainty import total_sigma
+
+    members = [(b, m) for b in (0.0, -2.0, 2.0) for m in ("harmonic", "tin")]
+    shift = {(0.0, "harmonic"): 0, (0.0, "tin"): 5, (-2.0, "harmonic"): -10,
+             (-2.0, "tin"): -5, (2.0, "harmonic"): 10, (2.0, "tin"): 15}
+
+    def ens(v0):
+        return pd.DataFrame([{"toe_buffer_m": b, "method": m, "volume": v0 + shift[(b, m)]}
+                             for b, m in members])
+
+    one = ens(100)["volume"].std(ddof=1)
+    # Two features that respond identically to the shared choices: the spread
+    # of the total is twice one feature's, not sqrt(2) times.
+    assert total_sigma([ens(100), ens(300)], [0.0, 0.0]) == pytest.approx(2 * one)
+    assert total_sigma([ens(100)], [3.0]) == pytest.approx(np.hypot(one, 3.0))
