@@ -32,7 +32,7 @@ surveys:
       local_glob: "*.laz"
     resolution: 0.5         # m; ~41 pts/m2 overall
     thin_m: 0.2             # decimate ground before triangulating
-    sigma_z: 0.10           # placeholder until the vendor report is in hand
+    sigma_z: 0.10           # fallback only; volumes use the measured 2021-2023 stable-ground variogram
 
 # Which survey the headline feature volumes come from (the newest available).
 primary_survey: osmre2023
