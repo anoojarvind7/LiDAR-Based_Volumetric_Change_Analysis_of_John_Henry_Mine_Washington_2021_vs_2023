@@ -68,6 +68,10 @@ reclamation earthworks that push spoil back into the flooded pit.
 * **Survey agreement.** On stable ground the two surveys differ by a
   +7.5 cm datum offset (removed) with 9 cm random and 9 cm correlated
   (≈160 m range) noise, which gives the 0.25 m level of detection.
+* **Horizontal alignment.** A shift search on stable slopes puts the 2021
+  survey 0.32 m (0.25 m east, 0.20 m north) off the 2023 one. Correcting it
+  changes the net change by under 0.1 % and each 2021 pile volume by at most
+  0.07 %, so it is not applied.
 * **Known answers.** Cones, paraboloids and a synthetic cut/fill scenario are
   recovered to within 0.5 % (`tests/`).
 
